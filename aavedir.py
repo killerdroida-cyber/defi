@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 from tabulate import tabulate
 
 URL = "https://api.v3.aave.com/graphql"
@@ -106,11 +105,11 @@ for chain_name, chain_id in CHAINS.items():
     except Exception as e:
         print("Error:", e)
 
-df = pd.DataFrame(all_markets)
-
-df = df.sort_values(
-    by="supply_apy",
-    ascending=False
+# Ordenar manualmente sin pandas
+all_markets = sorted(
+    all_markets,
+    key=lambda x: x["supply_apy"],
+    reverse=True
 )
 
 print("\n")
@@ -120,16 +119,10 @@ print("=" * 80)
 
 print(
     tabulate(
-        df.head(100),
+        all_markets[:100],
         headers="keys",
-        tablefmt="pretty",
-        showindex=False
+        tablefmt="pretty"
     )
 )
 
-df.to_csv(
-    "aave_realtime_rates.csv",
-    index=False
-)
-
-print("\nCSV exportado: aave_realtime_rates.csv")
+print("\nTotal markets:", len(all_markets))
