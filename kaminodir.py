@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 from tabulate import tabulate
 
 # ==========================================
@@ -69,11 +68,11 @@ for reserve in data:
     except Exception as e:
         print("Error:", e)
 
-df = pd.DataFrame(all_markets)
-
-df = df.sort_values(
-    by="supply_apy",
-    ascending=False
+# Ordenar manualmente sin pandas
+all_markets = sorted(
+    all_markets,
+    key=lambda x: x["supply_apy"],
+    reverse=True
 )
 
 print("\n")
@@ -83,16 +82,10 @@ print("=" * 70)
 
 print(
     tabulate(
-        df,
+        all_markets,
         headers="keys",
-        tablefmt="pretty",
-        showindex=False
+        tablefmt="pretty"
     )
 )
 
-df.to_csv(
-    "kamino_main_direct.csv",
-    index=False
-)
-
-print("\nCSV exportado: kamino_main_direct.csv")
+print("\nTotal markets:", len(all_markets))
